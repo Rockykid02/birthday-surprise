@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Happy Birthday, Trish!!! :)</title>
+  <link href="https://fonts.googleapis.com/css?family=Work+Sans:300,400" rel="stylesheet">
+  <link rel="stylesheet" href="style/style.css">
+</head>
+
+<body>
+  <button id="sound-toggle" class="sound-toggle" aria-label="Toggle Sound" title="Sound On/Off">
+    <span id="sound-icon">🔊</span>
+  </button>
+
+  <div id="prank-screen" class="prank-overlay">
+    <div id="prank-call-card" class="call-card">
+      <div class="call-header">
+        <span class="call-badge">Incoming Video Call</span>
+      </div>
+
+      <div class="call-avatar-container">
+        <div class="pulse-ring ring-1"></div>
+        <div class="pulse-ring ring-2"></div>
+        <div class="pulse-ring ring-3"></div>
+        <img id="prank-avatar" class="call-avatar" src="img/trish.jpg" alt="Caller Avatar">
+      </div>
+
+      <div class="call-details">
+        <h2 id="prank-caller-name" class="caller-name">The Universe 🌌</h2>
+        <p id="prank-call-status" class="call-status">Incoming Birthday Stream for Trish...</p>
+        <div id="prank-decline-warning" class="decline-warning"></div>
+      </div>
+
+      <div class="call-actions">
+        <div class="action-btn-wrapper" id="decline-wrapper">
+          <button id="btn-decline" class="call-btn btn-decline" type="button" aria-label="Decline Call">
+            <svg viewBox="0 0 24 24" class="call-icon">
+              <path fill="currentColor" d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08a.996.996 0 0 1 0-1.41C2.55 9.42 6.94 7.5 12 7.5c5.05 0 9.45 1.92 11.71 4.16.39.39.39 1.02 0 1.41l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.11-.7-.28-.79-.74-1.69-1.36-2.67-1.85-.33-.16-.56-.5-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/>
+            </svg>
+          </button>
+          <span class="btn-label">Decline</span>
+        </div>
+
+        <div class="action-btn-wrapper">
+          <button id="btn-accept" class="call-btn btn-accept" type="button" aria-label="Accept Call">
+            <svg viewBox="0 0 24 24" class="call-icon">
+              <path fill="currentColor" d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 0 0-1.01.24l-2.2 2.2a15.053 15.053 0 0 1-6.59-6.59l2.2-2.21a.96.96 0 0 0 .25-1A11.36 11.36 0 0 1 8.57 3.9c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.52c0-.55-.45-1-.99-1z"/>
+            </svg>
+          </button>
+          <span class="btn-label">Accept</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="one">
+      <h1 class="one">
+        <span data-node-name="greeting">Hey</span>
+        <span data-node-name="name">Trish</span>
+      </h1>
+      <p class="two" data-node-name="greetingText">I really like your name btw!</p>
+    </div>
+    <div class="three">
+      <p data-node-name="text1">It's your birthday, Trish!!! :D</p>
+    </div>
+    <div class="four">
+      <div class="text-box">
+        <p class="hbd-chatbox" data-node-name="textInChatBox">Happy birthday to you!! Yeee!</p>
+        <p class="fake-btn" data-node-name="sendButtonLabel">Send</p>
+      </div>
+    </div>
+    <div class="five">
+      <p class="idea-1" data-node-name="text2">That's what I was going to do.</p>
+      <p class="idea-2" data-node-name="text3">But then I stopped.</p>
+      <p class="idea-3">
+        <span data-node-name="text4">I realised, I wanted to do something</span>
+        <strong data-node-name="text4Adjective">special</strong>.</p>
+      <p class="idea-4" data-node-name="text5Entry">Because,</p>
+      <p class="idea-5">
+        <span data-node-name="text5Content">You are Special</span>
+        <span class="smiley" data-node-name="smiley">:)</span>
+      </p>
+      <p class="idea-6">
+        <span data-node-name="bigTextPart1">S</span>
+        <span data-node-name="bigTextPart2">O</span>
+      </p>
+    </div>
+    <div class="six">
+      <div class="dp-wrapper">
+        <img src="img/trish.jpg" alt="Trish" class="lydia-dp" data-node-name="imagePath">
+        <svg class="hat" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="hatGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#ec4899"/>
+              <stop offset="100%" stop-color="#be185d"/>
+            </linearGradient>
+          </defs>
+          <path d="M 50 5 L 20 75 L 80 75 Z" fill="url(#hatGrad)"/>
+          <rect x="15" y="72" width="70" height="12" rx="6" fill="#f472b6"/>
+          <circle cx="50" cy="8" r="7" fill="#fbbf24"/>
+          <circle cx="35" cy="40" r="3" fill="#fff" opacity="0.7"/>
+          <circle cx="55" cy="30" r="3" fill="#fff" opacity="0.7"/>
+          <circle cx="45" cy="55" r="3" fill="#fff" opacity="0.7"/>
+          <circle cx="62" cy="50" r="3" fill="#fff" opacity="0.7"/>
+        </svg>
+      </div>
+      <div class="wish">
+        <h3 class="wish-hbd" data-node-name="wishHeading">Happy Birthday Trish!</h3>
+        <h5 data-node-name="wishText">Wishing you the sweetest, happiest birthday! 💖</h5>
+      </div>
+    </div>
+    <div class="seven">
+      <div class="baloons" id="baloons-container"></div>
+    </div>
+    <div class="eight">
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="20" /></svg>
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="20" /></svg>
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="20" /></svg>
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="20" /></svg>
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="20" /></svg>
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="20" /></svg>
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="20" /></svg>
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="20" /></svg>
+      <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="20" /></svg>
+    </div>
+    <div class="nine">
+      <p data-node-name="outroText">Okay, now come back and tell me if you liked it.</p>
+      <p id="replay" data-node-name="replayText">Or click, if you want to watch it again.</p>
+      <p class="last-smile" data-node-name="outroSmiley">:)</p>
+      <a href="cake.html" class="next-surprise-btn" id="next-surprise-btn">
+        🎁 One More Surprise →
+      </a>
+    </div>
+  </div>
+</body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>
+<script type="application/javascript" src="script/main.js"></script>
+
+</html>
