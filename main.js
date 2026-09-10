@@ -9,22 +9,26 @@ class SoundController {
     this.isBgmPlaying = false;
   }
   init() {
-    if (!this.audioCtx) {
-      const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
-      if (AudioCtxClass) {
-        this.audioCtx = new AudioCtxClass();
-        this.masterGain = this.audioCtx.createGain();
-        this.masterGain.gain.value = 0.22;
-        this.masterGain.connect(this.audioCtx.destination);
+    try {
+      if (!this.audioCtx) {
+        const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtxClass) {
+          this.audioCtx = new AudioCtxClass();
+          this.masterGain = this.audioCtx.createGain();
+          this.masterGain.gain.value = 0.22;
+          this.masterGain.connect(this.audioCtx.destination);
+        }
       }
-    }
-    if (this.audioCtx && this.audioCtx.state === "suspended") this.audioCtx.resume();
+      if (this.audioCtx && this.audioCtx.state === "suspended") this.audioCtx.resume();
+    } catch (e) { console.warn("Audio init error:", e); }
   }
   toggleMute() {
     this.isMuted = !this.isMuted;
-    if (this.masterGain && this.audioCtx) {
-      this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 0.22, this.audioCtx.currentTime);
-    }
+    try {
+      if (this.masterGain && this.audioCtx) {
+        this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 0.22, this.audioCtx.currentTime);
+      }
+    } catch (e) {}
     return this.isMuted;
   }
   playNote(freq, duration, type = "sine", timeOffset = 0, volume = 0.3) {
@@ -124,6 +128,25 @@ class SoundController {
 
 const sounds = new SoundController();
 
+function setImageWithFallback(el, src) {
+  if (!el) return;
+  try {
+    el.onerror = function() {
+      this.onerror = null;
+      this.src = "data:image/svg+xml;utf8," + encodeURIComponent(
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">' +
+        '<defs><radialGradient id="g" cx="50%" cy="50%" r="50%">' +
+        '<stop offset="0%" stop-color="#fce7f3"/><stop offset="100%" stop-color="#f9a8d4"/>' +
+        '</radialGradient></defs>' +
+        '<rect width="200" height="200" fill="url(#g)"/>' +
+        '<text x="100" y="120" font-family="Arial" font-size="80" text-anchor="middle">💖</text>' +
+        '</svg>'
+      );
+    };
+    el.setAttribute("src", src);
+  } catch (e) { console.warn(e); }
+}
+
 const generateBalloons = () => {
   const container = document.getElementById("baloons-container");
   if (!container) return;
@@ -172,7 +195,7 @@ const setupPrankCall = (data) => {
 
   if (data.prankCallerName && callerNameEl) callerNameEl.innerText = data.prankCallerName;
   if (data.prankCallStatus && callStatusEl) callStatusEl.innerText = data.prankCallStatus;
-  if (data.imagePath && callerAvatar) callerAvatar.setAttribute("src", data.imagePath);
+  if (data.imagePath && callerAvatar) setImageWithFallback(callerAvatar, data.imagePath);
 
   if (data.enablePrankCall === false) {
     prankScreen.style.display = "none";
@@ -202,13 +225,15 @@ const setupPrankCall = (data) => {
     const handleDeclineClick = (e) => {
       e.stopPropagation();
       declineCount++;
-      sounds.playDeclineSound();
+      try { sounds.playDeclineSound(); } catch(err){}
       btnDecline.classList.remove("shake-anim");
       void btnDecline.offsetWidth;
       btnDecline.classList.add("shake-anim");
       const quoteIndex = (declineCount - 1) % declineQuotes.length;
-      declineWarning.innerText = declineQuotes[quoteIndex];
-      declineWarning.classList.add("show");
+      if (declineWarning) {
+        declineWarning.innerText = declineQuotes[quoteIndex];
+        declineWarning.classList.add("show");
+      }
       if (declineCount >= 2 && declineWrapper) {
         const randomX = (Math.random() - 0.5) * 110;
         const randomY = (Math.random() - 0.5) * 60;
@@ -220,18 +245,22 @@ const setupPrankCall = (data) => {
 
   if (btnAccept) {
     btnAccept.addEventListener("click", (e) => {
+      e.preventDefault();
       e.stopPropagation();
-      sounds.stopRingtone();
-      sounds.playConnectChime();
+
+      try { sounds.stopRingtone(); } catch(err) { console.warn(err); }
+      try { sounds.playConnectChime(); } catch(err) { console.warn(err); }
+
       if (callStatusEl) callStatusEl.innerText = "Connected! 📞 Loading celebration...";
       if (declineWrapper) {
         declineWrapper.style.opacity = "0";
         declineWrapper.style.pointerEvents = "none";
       }
+
       setTimeout(() => {
-        sounds.startBirthdayBGM();
+        try { sounds.startBirthdayBGM(); } catch(err) { console.warn(err); }
         prankScreen.classList.add("fade-out");
-        animationTimeline();
+        try { animationTimeline(); } catch(err) { console.error("Timeline error:", err); }
       }, 700);
     });
   }
@@ -240,32 +269,41 @@ const setupPrankCall = (data) => {
 const fetchData = () => {
   setupSoundToggle();
   generateBalloons();
-  fetch("customize.json")
-    .then(data => data.json())
+
+  fetch("Customize.json")
+    .then(response => {
+      if (!response.ok) throw new Error("HTTP " + response.status);
+      return response.json();
+    })
     .then(data => {
-      Object.keys(data).map(customData => {
-        if (data[customData] !== "") {
-          const elem = document.querySelector(`[data-node-name*="${customData}"]`);
+      Object.keys(data).forEach(key => {
+        if (data[key] !== "") {
+          const elem = document.querySelector(`[data-node-name*="${key}"]`);
           if (elem) {
-            if (customData === "imagePath") elem.setAttribute("src", data[customData]);
-            else elem.innerText = data[customData];
+            if (key === "imagePath") setImageWithFallback(elem, data[key]);
+            else elem.innerText = data[key];
           }
         }
       });
       setupPrankCall(data);
     })
     .catch(err => {
-      console.warn("Could not load customize.json:", err);
-      animationTimeline();
+      console.warn("Could not load Customize.json:", err);
+      setupPrankCall({});
     });
 };
 
 let masterTimeline = null;
 
 const animationTimeline = () => {
+  if (typeof TimelineMax === "undefined") {
+    console.error("GSAP TimelineMax not loaded!");
+    return;
+  }
+
   if (masterTimeline) {
     masterTimeline.restart();
-    sounds.startBirthdayBGM();
+    try { sounds.startBirthdayBGM(); } catch(e){}
     const btn = document.getElementById("next-surprise-btn");
     if (btn) btn.classList.remove("visible");
     return;
@@ -276,11 +314,11 @@ const animationTimeline = () => {
 
   if (textBoxChars) {
     textBoxChars.innerHTML = textBoxChars.innerText
-      .split("").map(char => (char === " " ? `<span style="display:inline-block; width:0.35em;">&nbsp;</span>` : `<span>${char}</span>`)).join("");
+      .split("").map(c => (c === " " ? `<span style="display:inline-block; width:0.35em;">&nbsp;</span>` : `<span>${c}</span>`)).join("");
   }
   if (hbd) {
     hbd.innerHTML = hbd.innerText
-      .split("").map(char => (char === " " ? `<span style="display:inline-block; width:0.35em;">&nbsp;</span>` : `<span>${char}</span>`)).join("");
+      .split("").map(c => (c === " " ? `<span style="display:inline-block; width:0.35em;">&nbsp;</span>` : `<span>${c}</span>`)).join("");
   }
 
   const ideaTextTrans = { opacity: 0, y: -20, rotationX: 5, skewX: "15deg" };
@@ -328,7 +366,8 @@ const animationTimeline = () => {
     .to(".next-surprise-btn", 0.8, {
       opacity: 1, y: 0, pointerEvents: "auto",
       onComplete: () => {
-        document.getElementById("next-surprise-btn").classList.add("visible");
+        const b = document.getElementById("next-surprise-btn");
+        if (b) b.classList.add("visible");
       }
     }, "-=0.5");
 
@@ -336,7 +375,7 @@ const animationTimeline = () => {
   if (replayBtn) {
     replayBtn.addEventListener("click", () => {
       tl.restart();
-      sounds.startBirthdayBGM();
+      try { sounds.startBirthdayBGM(); } catch(e){}
       const btn = document.getElementById("next-surprise-btn");
       if (btn) btn.classList.remove("visible");
     });
